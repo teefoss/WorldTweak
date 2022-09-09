@@ -23,7 +23,7 @@ typedef struct {
     float * value; // could also be an int
 
     int decimal_places; // for display purposes
-    float step; // amount by which value increases decreases when stepped
+    float step; // amount by which value increases/decreases when stepped
     float default_value;
 } property_t;
 
@@ -36,7 +36,7 @@ int generation_ms; // time GenerateWorld() takes, in milliseconds
 // property list
 //
 
-#define NUM_LAYERS (sizeof(layers) / sizeof(layers[0]))
+#define NUM_LAYERS (int)(sizeof(layers) / sizeof(layers[0]))
 
 float layers[] = {
     -1.00, // deep ocean
@@ -55,7 +55,7 @@ float frequency = 0.01f;
 float octaves = 6;
 float mask_on = 1.0f;
 
-#define NUM_PROPERTIES (sizeof(properties) / sizeof(properties[0]))
+#define NUM_PROPERTIES (int)(sizeof(properties) / sizeof(properties[0]))
 int selection;
 property_t properties[] = {
     { "World Width",        &world_width,   0,  16,     },
@@ -199,20 +199,20 @@ void PrintLabel(int x, int y, const char * format, ...)
     va_end(args[0]);
     va_end(args[1]);
 
-    // create an neat lil box to go behind the text
+    // create a neat lil box to go behind the text
     {
         int margin = 6;
         int w = CharWidth() * len + margin * 2;
         int h = CharHeight() + margin * 2;
-        SDL_Rect background = { x, y, w, h };
+        SDL_Rect background_rect = { x, y, w, h };
 
         SetGray(0);
-        FillRect(background);
+        FillRect(background_rect);
 
-        background.x -= margin;
-        background.y -= margin;
+        background_rect.x -= margin;
+        background_rect.y -= margin;
         SetGray(32);
-        FillRect(background);
+        FillRect(background_rect);
     }
 
     // restore text color
@@ -289,6 +289,10 @@ void SetUpWindowEtCetera(void)
 
 int main()
 {
+    puts("worldtweak");
+    puts("Perlin noise world generation tweaking tool");
+    puts("by Thomas Foster\n");
+
     // viewCenter is the world coordinate that should
     // appear centered on screen.
     int viewCenterX = world_width / 2;
@@ -304,6 +308,7 @@ int main()
     int char_w = CharWidth();
     int char_h = CharHeight();
 
+    puts("generating world");
     GenerateWorld();
 
     //

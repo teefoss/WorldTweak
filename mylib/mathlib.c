@@ -42,7 +42,7 @@ bool LineCircleIntersection
     double C = x2 * y1 - x1 * y2;
     double a = sq(A) + sq(B);
     double b, c, d;
-    bool bnz = true;
+    //bool bnz = true;
     //int cnt = 0;
 
     if (fabs(B) >= eps) {
@@ -52,7 +52,7 @@ bool LineCircleIntersection
     } else {
         b = 2 * (B * C + A * B * x0 - sq(A) * y0);
         c = sq(C) + 2 * A * C * x0 - sq(A) * (sq(r) - sq(x0) - sq(y0));
-        bnz = false;
+        //bnz = false;
     }
     d = sq(b) - 4 * a * c; // discriminant
     if (d < 0) {
