@@ -53,6 +53,9 @@ float world_height = 512;
 float world_seed = 0;
 float frequency = 0.01f;
 float octaves = 6;
+float amplitude = 1.0f;
+float persistence = 0.5f;
+float lacunarity = 2.0f;
 float mask_on = 1.0f;
 
 #define NUM_PROPERTIES (int)(sizeof(properties) / sizeof(properties[0]))
@@ -61,8 +64,11 @@ property_t properties[] = {
     { "World Width",        &world_width,   0,  16,     },
     { "World Height",       &world_height,  0,  16      },
     { "World Seed",         &world_seed,    0,  1       },
-    { "Noise Frequency",    &frequency,     3,  0.001f  },
-    { "Noise Octaves",      &octaves,       0,  1       },
+    { "Frequency",          &frequency,     3,  0.001f  },
+    { "Octaves",            &octaves,       0,  1       },
+    { "Amplitude",          &amplitude,     1,  0.1f    },
+    { "Persistence (0..1)", &persistence,   1,  0.1f    },
+    { "Lacunarity (1+)",    &lacunarity,    1,  0.1f    },
     { "Deep Ocean",         &layers[0],     2,  0.05f   },
     { "Shallow Ocean",      &layers[1],     2,  0.05f   },
     { "Beach",              &layers[2],     2,  0.05f   },
@@ -70,7 +76,7 @@ property_t properties[] = {
     { "Forest",             &layers[4],     2,  0.05f   },
     { "Mountain",           &layers[5],     2,  0.05f   },
     { "Snow",               &layers[6],     2,  0.05f   },
-    { "Mask On",            &mask_on,       0,  1      },
+    { "Mask On",            &mask_on,       0,  1       },
 };
 
 // TODO: name and define these colors somewhere
@@ -137,7 +143,14 @@ void GenerateWorld(void)
                 gradient = mask_on
                 ? MAP(dist, 0.0f, world_height / 2.0f, 0.0f, 1.0f)
                 : 0;
-                noise = Noise2(x, y, z, frequency, octaves, 1.0, 0.5, 2.0) - gradient;
+                noise = Noise2(x,
+                               y,
+                               z,
+                               frequency,
+                               octaves,
+                               amplitude,
+                               persistence,
+                               lacunarity) - gradient;
             } else {
                 noise = -1.0f;
             }
